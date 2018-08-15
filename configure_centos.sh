@@ -12,6 +12,7 @@ yum update -y
 yum groupinstall "Base" -y
 yum install screen -y
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
+sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 /usr/sbin/setenforce 0
 iptables-save > /root/firewall.rules
 
