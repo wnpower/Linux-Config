@@ -2,6 +2,8 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+SSH_PORT=2022
+
 if [ ! -f /etc/redhat-release ]; then
 	echo "CentOS no detectado, abortando."
 	exit 0
@@ -37,6 +39,19 @@ echo "nameserver 8.8.4.4" >> /etc/resolv.conf # Google
 echo "Configurando SSH..."
 sed -i 's/^X11Forwarding.*/X11Forwarding no/' /etc/ssh/sshd_config
 sed -i 's/#UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
+
+echo "Cambiando puerto SSH..."
+if [ -d /etc/csf ]; then
+	echo "Abriendo CSF..."
+        CURR_CSF_IN=$(grep "^TCP_IN" /etc/csf/csf.conf | cut -d'=' -f2 | sed 's/\ //g' | sed 's/\"//g' | sed "s/,$SSH_PORT,/,/g" | sed "s/,$SSH_PORT//g" | sed "s/$SSH_PORT,//g" | sed "s/,,//g")
+        sed -i "s/^TCP_IN.*/TCP_IN = \"$CURR_CSF_IN,$SSH_PORT\"/" /etc/csf/csf.conf
+        csf -r
+fi
+
+echo "Cambiando puerto SSH default 22 a $SSH_PORT..."
+sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
+
+service sshd restart
 
 echo "Configurando FSCK..."
 grubby --update-kernel=ALL --args=fsck.repair=yes
