@@ -53,6 +53,9 @@ sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
 
 service sshd restart
 
+firewall-cmd --permanent --add-port=2022/tcp
+firewall-cmd --reload
+
 echo "Configurando FSCK..."
 grubby --update-kernel=ALL --args=fsck.repair=yes
 grep "fsck.repair" /etc/default/grub > /dev/null || sed 's/^GRUB_CMDLINE_LINUX="/&fsck.repair=yes /' /etc/default/grub
