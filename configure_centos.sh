@@ -93,5 +93,6 @@ yum install git -y
 
 echo "Instalando CRON clean de Journal..."
 echo "30 22 * * * root /usr/bin/journalctl --vacuum-time=1d; /usr/sbin/service systemd-journald restart" > /etc/cron.d/clean_journal
+service crond restart
 
 echo "Finalizado!"
