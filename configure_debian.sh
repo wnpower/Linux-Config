@@ -53,6 +53,6 @@ hwclock -r
 
 echo "Instalando CRON clean de Journal..."
 echo "30 22 * * * root /bin/journalctl --vacuum-time=1d; /usr/sbin/service systemd-journald restart" > /etc/cron.d/clean_journal
-service crond restart
+service cron restart
 
 echo "Finalizado!"
