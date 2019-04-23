@@ -4,6 +4,22 @@ CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 SSH_PORT=2022
 
+echo "Configurando repositorios repositorios..."
+
+if grep "^9\." /etc/debian_version > /dev/null; then
+	echo "Debian 9 Detectado, configurando sources.list..."
+	cat > /etc/apt/sources.list << EOF
+deb http://ftp.debian.org/debian stretch main
+deb-src http://ftp.debian.org/debian stretch main
+
+deb http://ftp.debian.org/debian-security/ stretch/updates main
+deb-src http://ftp.debian.org/debian-security/ stretch/updates main
+
+deb http://ftp.debian.org/debian stretch-updates main
+deb-src http://ftp.debian.org/debian stretch-updates main
+EOF
+fi
+
 echo "Actualizando SO e instalando paquetes básicos..."
 apt update
 apt upgrade -y
