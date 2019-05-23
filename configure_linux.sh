@@ -48,4 +48,10 @@ elif echo $OS | grep -i "debian" > /dev/null; then
 	apt install wget -y
         wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_debian.sh -O /tmp/configure_debian.sh
         bash /tmp/configure_debian.sh
+
+elif echo $OS | grep -i "ubuntu" > /dev/null; then
+        echo "Ejecutando script para Ubuntu..."
+        apt install wget -y
+        wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_ubuntu.sh -O /tmp/configure_ubuntu.sh
+        bash /tmp/configure_ubuntu.sh
 fi
