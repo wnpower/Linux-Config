@@ -53,8 +53,15 @@ sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
 
 service sshd restart
 
-firewall-cmd --permanent --add-port=2022/tcp
-firewall-cmd --reload
+if [ -f /etc/sysconfig/iptables ]; then
+	sed -i 's/dport 22 /dport 2022 /' /etc/sysconfig/iptables
+	service iptables restart
+fi
+
+if [ -f /usr/bin/firewall-cmd ] ;then
+	firewall-cmd --permanent --add-port=2022/tcp > /dev/null
+	firewall-cmd --reload 
+fi
 
 echo "Configurando FSCK..."
 grubby --update-kernel=ALL --args=fsck.repair=yes
