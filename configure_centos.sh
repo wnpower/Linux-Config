@@ -53,12 +53,19 @@ sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
 
 service sshd restart
 
+# FIREWALL
+
+# SI TIENE SOLO IPTABLES
 if [ -f /etc/sysconfig/iptables ]; then
 	sed -i 's/dport 22 /dport 2022 /' /etc/sysconfig/iptables
-	service iptables restart
+	service iptables restart 2>/dev/null
 fi
 
-if [ -f /usr/bin/firewall-cmd ] ;then
+# SI TIENE FIREWALLD
+if systemctl is-enabled firewalld | grep "^enabled$" > /dev/null; then
+	if systemctl is-active firewalld | grep "^inactive$" > /dev/null; then
+		service firewalld restart
+	fi
 	firewall-cmd --permanent --add-port=2022/tcp > /dev/null
 	firewall-cmd --reload 
 fi
