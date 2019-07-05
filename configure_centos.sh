@@ -67,6 +67,7 @@ if systemctl is-enabled firewalld | grep "^enabled$" > /dev/null; then
 		service firewalld restart
 	fi
 	firewall-cmd --permanent --add-port=2022/tcp > /dev/null
+	firewall-offline-cmd --add-port=2022/tcp > /dev/null
 	firewall-cmd --reload 
 fi
 
