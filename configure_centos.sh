@@ -19,16 +19,17 @@ sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 iptables-save > /root/firewall.rules
 
 echo "Configurando Red..."
-RED=$(route -n | awk '$1 == "0.0.0.0" {print $8}')
-ETHCFG="/etc/sysconfig/network-scripts/ifcfg-$RED"
-
-sed -i '/^PEERDNS=.*/d' $ETHCFG
-sed -i '/^DNS1=.*/d' $ETHCFG
-sed -i '/^DNS2=.*/d' $ETHCFG
+find /etc/sysconfig/network-scripts/ -name "ifcfg-*" -not -name "ifcfg-lo" | while read ETHCFG
+do
+	sed -i '/^PEERDNS=.*/d' $ETHCFG
+	sed -i '/^DNS1=.*/d' $ETHCFG
+	sed -i '/^DNS2=.*/d' $ETHCFG
 	
-echo "PEERDNS=no" >> $ETHCFG
-echo "DNS1=8.8.8.8" >> $ETHCFG
-echo "DNS2=8.8.4.4" >> $ETHCFG
+	echo "PEERDNS=no" >> $ETHCFG
+	echo "DNS1=8.8.8.8" >> $ETHCFG
+	echo "DNS2=8.8.4.4" >> $ETHCFG
+
+done
 
 echo "Reescribiendo /etc/resolv.conf..."
 
