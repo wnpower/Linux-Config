@@ -11,7 +11,7 @@ fi
 
 echo "Actualizando SO..."
 yum update -y
-yum groupinstall "Base" -y
+yum groupinstall "Base" --skip-broken -y
 yum install screen -y
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
