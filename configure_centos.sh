@@ -111,4 +111,9 @@ echo "Instalando CRON clean de Journal..."
 echo "30 22 * * * root /usr/bin/journalctl --vacuum-time=1d; /usr/sbin/service systemd-journald restart" > /etc/cron.d/clean_journal
 service crond restart
 
+if [ ! -z "$1" ]; then
+	echo "Avisando a $1..."
+	mailx -s "Servidor $(hostname -f) deployado con $2 $(echo -e "\nContent-Type: text/html")" -r "$(hostname -f) <$(hostname -f)>" "$1"
+fi
+
 echo "Finalizado!"
