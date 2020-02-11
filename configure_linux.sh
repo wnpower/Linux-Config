@@ -1,6 +1,7 @@
 #!/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+LOGFILE="/var/log/configure_linux.log"
 
 if [ -f /etc/os-release ]; then
         # freedesktop.org and systemd
@@ -41,17 +42,17 @@ if echo $OS | grep -i "centos\|cloudlinux\|redhat" > /dev/null; then
 	echo "Ejecutando script para CentOS/CloudLinux/Red Hat..."
 	yum install wget -y
 	wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_centos.sh -O /tmp/configure_centos.sh
-	bash /tmp/configure_centos.sh "$@"
+	bash /tmp/configure_centos.sh "$@" 2>&1 | tee "$LOGFILE"
 
 elif echo $OS | grep -i "debian" > /dev/null; then
 	echo "Ejecutando script para Debian..."
 	apt install wget -y
         wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_debian.sh -O /tmp/configure_debian.sh
-        bash /tmp/configure_debian.sh "$@"
+        bash /tmp/configure_debian.sh "$@" 2>&1 | tee "$LOGFILE"
 
 elif echo $OS | grep -i "ubuntu" > /dev/null; then
         echo "Ejecutando script para Ubuntu..."
         apt install wget -y
         wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_ubuntu.sh -O /tmp/configure_ubuntu.sh
-        bash /tmp/configure_ubuntu.sh "$@"
+        bash /tmp/configure_ubuntu.sh "$@" 2>&1 | tee "$LOGFILE"
 fi

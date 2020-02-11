@@ -1,6 +1,7 @@
 #!/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+LOGFILE="/var/log/configure_linux.log"
 
 SSH_PORT=2022
 
@@ -111,9 +112,17 @@ echo "Instalando CRON clean de Journal..."
 echo "30 22 * * * root /usr/bin/journalctl --vacuum-time=1d; /usr/sbin/service systemd-journald restart" > /etc/cron.d/clean_journal
 service crond restart
 
-if [ ! -z "$1" ]; then
-	echo "Avisando a $1..."
-	mailx -s "Servidor $(hostname -f) deployado con $2 $(echo -e "\nContent-Type: text/html")" -r "$(hostname -f) <$(hostname -f)>" "$1"
-fi
+# TAREAS POST-INSTALACION
+
+for i in "$@"
+do
+case $i in
+        --notify-email=*)
+                EMAIL="${i#*=}"
+		echo "Avisando a $1..."
+	        cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>/g' | mailx -s "Servidor $(hostname -f) configurado con $(basename $0) $(echo -e "\nContent-Type: text/html")" -r "$(hostname -f) <$(hostname -f)>" "$EMAIL"
+	;;
+esac
+done
 
 echo "Finalizado!"
