@@ -87,7 +87,7 @@ case $i in
 
 	        #cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>/g' | mailx -s "Servidor $(hostname -f) configurado con $(basename $0) $(echo -e "\nContent-Type: text/html")" -r "root@$(hostname -f) <root@$(hostname -f)>" "$EMAIL"
 
-		echo -e "From: $(hostname -f) <$(hostname -f)>\nSubject: Servidor $(hostname -f) configurado con $(basename $0)\nContent-Type: text/html\n\n $(cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>/g')" | sendmail "$EMAIL"
+		echo -e "From: $(hostname -f) <$(hostname -f)>\nSubject: Servidor $(hostname -f) configurado con $(basename $0)\nContent-Type: text/html\n\n $(cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>\n/g')" | sendmail "$EMAIL"
 
 		cp -af /etc/exim4/update-exim4.conf.conf.bak /etc/exim4/update-exim4.conf.conf
 		service exim4 restart
