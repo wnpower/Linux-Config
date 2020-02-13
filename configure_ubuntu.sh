@@ -55,4 +55,27 @@ echo "Instalando CRON clean de Journal..."
 echo "30 22 * * * root /bin/journalctl --vacuum-time=1d; /usr/sbin/service systemd-journald restart" > /etc/cron.d/clean_journal
 service cron restart
 
+# TAREAS POST-INSTALACION
+
+for i in "$@"
+do
+case $i in
+        --notify-email=*)
+                EMAIL="${i#*=}"
+		echo "Avisando a $EMAIL..."
+		# ACTIVO EL ENVIO REMOTO
+		cp -af /etc/exim4/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf.bak
+		sed -i 's/dc_eximconfig_configtype=.*/dc_eximconfig_configtype=\x27internet\x27/' /etc/exim4/update-exim4.conf.conf
+		service exim4 restart
+
+	        #cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>/g' | mailx -s "Servidor $(hostname -f) configurado con $(basename $0) $(echo -e "\nContent-Type: text/html")" -r "root@$(hostname -f) <root@$(hostname -f)>" "$EMAIL"
+
+		echo -e "From: $(hostname -f) <$(hostname -f)>\nSubject: Servidor $(hostname -f) configurado con $(basename $0)\nContent-Type: text/html\n\n $(cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>\n/g')" | sendmail "$EMAIL"
+
+		cp -af /etc/exim4/update-exim4.conf.conf.bak /etc/exim4/update-exim4.conf.conf
+		service exim4 restart
+	;;
+esac
+done
+
 echo "Finalizado!"
