@@ -8,6 +8,7 @@ SSH_PORT=2022
 echo "Actualizando SO e instalando paquetes básicos..."
 apt update
 apt upgrade -y
+apt install ca-certificates -y
 apt install screen ntpdate git -y
 
 echo "Configurando Red..."
