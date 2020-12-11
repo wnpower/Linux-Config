@@ -96,5 +96,7 @@ case $i in
 esac
 done
 
+# DESACTIVAR MLOCATE
+chmod -x /etc/cron.daily/mlocate
 
 echo "Finalizado!"
