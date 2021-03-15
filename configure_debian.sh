@@ -23,7 +23,8 @@ fi
 
 echo "Actualizando SO e instalando paquetes básicos..."
 apt update
-apt upgrade -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' -y
+DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
+DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 apt install ca-certificates -y
 apt install screen ntpdate git -y
 
