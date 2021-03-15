@@ -7,7 +7,7 @@ SSH_PORT=2022
 
 echo "Actualizando SO e instalando paquetes básicos..."
 apt update
-apt upgrade -y
+apt upgrade -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' -y
 apt install ca-certificates -y
 apt install screen ntpdate git -y
 
