@@ -106,6 +106,7 @@ if grep -i "release 8" /etc/redhat-release > /dev/null; then
 	yum install chrony -y
         systemctl enable chronyd
 else
+	yum install ntpdate -y
         echo "Sincronizando fecha con pool.ntp.org..."
         ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
 fi
