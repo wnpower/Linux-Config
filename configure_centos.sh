@@ -77,10 +77,17 @@ echo "Configurando FSCK..."
 grubby --update-kernel=ALL --args=fsck.repair=yes
 grep "fsck.repair" /etc/default/grub > /dev/null || sed 's/^GRUB_CMDLINE_LINUX="/&fsck.repair=yes /' /etc/default/grub
 
-echo "Configurando Yum-Cron..."
-yum -y install yum-cron
-sed -i 's/^apply_updates.*/apply_updates = yes/' /etc/yum/yum-cron.conf
-systemctl start yum-cron.service
+if grep -i "release 8" /etc/redhat-release > /dev/null; then
+	echo "Configurando dnf-automatic ..."
+	yum -y install dnf-automatic
+	sed -i 's/^apply_updates.*/apply_updates = yes/' /etc/dnf/automatic.conf
+	systemctl enable --now dnf-automatic.timer
+else
+        echo "Configurando Yum-Cron..."
+        yum -y install yum-cron
+        sed -i 's/^apply_updates.*/apply_updates = yes/' /etc/yum/yum-cron.conf
+        systemctl start yum-cron.service
+fi
 
 echo "Configurando SSD (de poseer)..."
 for DEVFULL in /dev/sg? /dev/sd?; do
@@ -94,8 +101,15 @@ for DEVFULL in /dev/sg? /dev/sd?; do
         fi
 done
 
-echo "Sincronizando fecha con pool.ntp.org..."
-ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
+if grep -i "release 8" /etc/redhat-release > /dev/null; then
+        echo "Instalando Chrony..."
+	yum install chrony -y
+        systemctl enable chronyd
+else
+        echo "Sincronizando fecha con pool.ntp.org..."
+        ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
+fi
+
 if [ -f /usr/share/zoneinfo/America/Buenos_Aires ]; then
         echo "Seteando timezone a America/Buenos_Aires..."
         mv /etc/localtime /etc/localtime.old
@@ -126,6 +140,8 @@ esac
 done
 
 # DESACTIVAR MLOCATE
-chmod -x /etc/cron.daily/mlocate
+if ! (grep -i "release 8" /etc/redhat-release > /dev/null); then
+	chmod -x /etc/cron.daily/mlocate
+fi
 
 echo "Finalizado!"
