@@ -13,6 +13,12 @@ fi
 echo "Actualizando SO..."
 yum update -y
 yum groupinstall "Base" --skip-broken -y
+
+if grep -i "release 8" /etc/redhat-release > /dev/null; then
+	# En RHL8 mejor instalar epel porque hay paquetes faltantes
+	yum install epel-release -y
+fi
+
 yum install screen -y
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
