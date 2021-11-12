@@ -117,11 +117,8 @@ else
         ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
 fi
 
-if [ -f /usr/share/zoneinfo/America/Buenos_Aires ]; then
-        echo "Seteando timezone a America/Buenos_Aires..."
-        mv /etc/localtime /etc/localtime.old
-        ln -s /usr/share/zoneinfo/America/Buenos_Aires /etc/localtime
-fi
+echo "Seteando timezone a America/Buenos_Aires..."
+timedatectl set-timezone "America/Argentina/Buenos_Aires"
 
 echo "Seteando fecha del BIOS..."
 hwclock -r
