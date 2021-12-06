@@ -84,4 +84,7 @@ done
 # DESACTIVAR MLOCATE
 chmod -x /etc/cron.daily/mlocate
 
+# DESACTIVAR SLEEP
+systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+
 echo "Finalizado!"
