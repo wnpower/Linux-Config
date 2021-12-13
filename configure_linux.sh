@@ -38,7 +38,7 @@ fi
 echo "Sistema operativo detectado: $OS, versión: $VER"
 echo ""
 
-if echo $OS | grep -i "centos\|cloudlinux\|redhat" > /dev/null; then
+if echo $OS | grep -i "centos\|cloudlinux\|redhat\|almalinux" > /dev/null; then
 	echo "Ejecutando script para CentOS/CloudLinux/Red Hat..."
 	yum install wget -y
 	wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_centos.sh -O /tmp/configure_centos.sh
