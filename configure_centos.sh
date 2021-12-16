@@ -16,7 +16,8 @@ yum groupinstall "Base" --skip-broken -y
 
 if grep -i "release 8" /etc/redhat-release > /dev/null; then
 	# En RHL8 mejor instalar epel porque hay paquetes faltantes
-	yum install epel-release -y
+	yum install epel-release dnf-plugins-core -y
+	yum config-manager --set-enabled powertools
 fi
 
 yum install screen -y
