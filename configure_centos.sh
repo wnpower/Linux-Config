@@ -149,4 +149,7 @@ if ! (grep -i "release 8" /etc/redhat-release > /dev/null); then
 	chmod -x /etc/cron.daily/mlocate
 fi
 
+# DESINSTALAR POSTFIX
+yum remove postfix -y
+
 echo "Finalizado!"
