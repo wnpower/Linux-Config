@@ -14,10 +14,11 @@ echo "Actualizando SO..."
 yum update -y
 yum groupinstall "Base" --skip-broken -y
 
-if grep -i "release 8" /etc/redhat-release > /dev/null; then
-	# En RHL8 mejor instalar epel porque hay paquetes faltantes
+if grep -i "Almalinux" /etc/redhat-release > /dev/null; then
+	# En RHL8 mejor instalar epel y otros porque hay paquetes faltantes
 	yum install epel-release dnf-plugins-core -y
 	yum config-manager --set-enabled powertools
+	yum install crontabs cronie cronie-anacron -y
 fi
 
 yum install screen -y
@@ -84,7 +85,7 @@ echo "Configurando FSCK..."
 grubby --update-kernel=ALL --args=fsck.repair=yes
 grep "fsck.repair" /etc/default/grub > /dev/null || sed 's/^GRUB_CMDLINE_LINUX="/&fsck.repair=yes /' /etc/default/grub
 
-if grep -i "release 8" /etc/redhat-release > /dev/null; then
+if grep -i "Almalinux" /etc/redhat-release > /dev/null; then
 	echo "Configurando dnf-automatic ..."
 	yum -y install dnf-automatic
 	sed -i 's/^apply_updates.*/apply_updates = yes/' /etc/dnf/automatic.conf
@@ -108,7 +109,7 @@ for DEVFULL in /dev/sg? /dev/sd?; do
         fi
 done
 
-if grep -i "release 8" /etc/redhat-release > /dev/null; then
+if grep -i "Almalinux" /etc/redhat-release > /dev/null; then
         echo "Instalando Chrony..."
 	yum install chrony -y
         systemctl enable chronyd
@@ -145,7 +146,7 @@ esac
 done
 
 # DESACTIVAR MLOCATE
-if ! (grep -i "release 8" /etc/redhat-release > /dev/null); then
+if ! (grep -i "Almalinux" /etc/redhat-release > /dev/null); then
 	chmod -x /etc/cron.daily/mlocate
 fi
 
