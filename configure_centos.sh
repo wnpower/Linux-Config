@@ -19,6 +19,7 @@ if grep -i "Almalinux" /etc/redhat-release > /dev/null; then
 	yum install epel-release dnf-plugins-core -y
 	yum config-manager --set-enabled powertools
 	yum install crontabs cronie cronie-anacron -y
+	yum install s-nail -y # AL9 sendmail
 fi
 
 yum install screen -y
@@ -140,7 +141,7 @@ case $i in
         --notify-email=*)
                 EMAIL="${i#*=}"
 		echo "Avisando a $EMAIL..."
-	        cat "$LOGFILE" | sed ':a;N;$!ba;s/\n/<br>\n/g' | mailx -s "Servidor $(hostname -f) configurado con $(basename $0) $(echo -e "\nContent-Type: text/html")" -r "$(hostname -f) <$(hostname -f)>" "$EMAIL"
+	        cat "$LOGFILE" | mailx -s "Servidor $(hostname -f) configurado con $(basename $0)" -r "root@$(hostname -f)" "$EMAIL"
 	;;
 esac
 done
