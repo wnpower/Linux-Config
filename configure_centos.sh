@@ -29,6 +29,8 @@ sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 iptables-save > /root/firewall.rules
 
 echo "Configurando Red..."
+
+# Viejo network-scripts. Deprecado en AL9
 find /etc/sysconfig/network-scripts/ -name "ifcfg-*" -not -name "ifcfg-lo" | while read ETHCFG
 do
 	sed -i '/^PEERDNS=.*/d' $ETHCFG
@@ -40,6 +42,26 @@ do
 	echo "DNS2=8.8.4.4" >> $ETHCFG
 
 done
+
+# Configurar cloud-init (en AWS para que no pise resolv.conf)
+if [ -f /etc/cloud/cloud.cfg ]; then
+        echo "Configurando cloud-init..."
+
+cat << 'EOF' > /etc/cloud/cloud.cfg.d/99-disable-peerdns.cfg
+bootcmd:
+ - sed -i '/^PEERDNS=/{h;s/=.*/=no/};${x;/^$/{s//PEERDNS=no/;H};x}' /etc/sysconfig/network-scripts/ifcfg-eth*
+EOF
+
+fi
+
+# Desactivar escritura de /etc/resolv.conf en NetworkManager
+if [ -d /etc/NetworkManager/ ]; then
+	cat << 'EOF' > /etc/NetworkManager/conf.d/90-dns-none.conf
+[main]
+dns=none
+EOF
+	systemctl reload NetworkManager
+fi
 
 echo "Reescribiendo /etc/resolv.conf..."
 
