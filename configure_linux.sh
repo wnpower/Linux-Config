@@ -44,7 +44,7 @@ if echo $OS | grep -i "centos" > /dev/null; then
 	wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_centos.sh -O /tmp/configure_centos.sh
 	bash /tmp/configure_centos.sh "$@" 2>&1 | tee "$LOGFILE"
 
-if echo $OS | grep -i "cloudlinux\|almalinux" > /dev/null; then
+elif echo $OS | grep -i "cloudlinux\|almalinux" > /dev/null; then
         echo "Ejecutando script para CloudLinux/Almalinux..."
         yum install wget -y
         wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_almalinux.sh -O /tmp/configure_almalinux.sh
