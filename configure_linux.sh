@@ -38,11 +38,17 @@ fi
 echo "Sistema operativo detectado: $OS, versión: $VER"
 echo ""
 
-if echo $OS | grep -i "centos\|cloudlinux\|redhat\|almalinux" > /dev/null; then
-	echo "Ejecutando script para CentOS/CloudLinux/Red Hat..."
+if echo $OS | grep -i "centos" > /dev/null; then
+	echo "Ejecutando script para CentOS..."
 	yum install wget -y
 	wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_centos.sh -O /tmp/configure_centos.sh
 	bash /tmp/configure_centos.sh "$@" 2>&1 | tee "$LOGFILE"
+
+if echo $OS | grep -i "cloudlinux\|almalinux" > /dev/null; then
+        echo "Ejecutando script para CloudLinux/Almalinux..."
+        yum install wget -y
+        wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_almalinux.sh -O /tmp/configure_almalinux.sh
+        bash /tmp/configure_almalinux.sh "$@" 2>&1 | tee "$LOGFILE"
 
 elif echo $OS | grep -i "debian" > /dev/null; then
 	echo "Ejecutando script para Debian..."
