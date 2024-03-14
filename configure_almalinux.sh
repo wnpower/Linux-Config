@@ -11,6 +11,7 @@ if [ ! -f /etc/redhat-release ]; then
 fi
 
 echo "Actualizando SO..."
+rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux # Update GPG https://cloudlinux.zendesk.com/hc/en-us/articles/12225072530204-yum-update-error-Error-GPG-check-FAILED
 dnf update -y
 dnf groupinstall "Base" --skip-broken -y
 
