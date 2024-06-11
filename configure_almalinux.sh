@@ -68,8 +68,12 @@ echo "nameserver 8.8.4.4" >> /etc/resolv.conf # Google
 
 
 echo "Configurando SSH..."
-sed -i 's/^X11Forwarding.*/X11Forwarding no/' /etc/ssh/sshd_config
 sed -i 's/#UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
+sed -i 's/^X11Forwarding.*/X11Forwarding no/' /etc/ssh/sshd_config
+sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
 echo "Cambiando puerto SSH..."
 if [ -d /etc/csf ]; then
