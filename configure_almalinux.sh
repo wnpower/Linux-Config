@@ -156,4 +156,7 @@ done
 # DESINSTALAR POSTFIX
 dnf remove postfix -y
 
+# ACTIVANDO TLS 1.0
+update-crypto-policies --set LEGACY
+
 echo "Finalizado!"
