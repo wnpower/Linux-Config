@@ -17,10 +17,11 @@ dnf groupinstall "Base" --skip-broken -y
 
 dnf install epel-release dnf-plugins-core -y
 dnf config-manager --set-enabled powertools
+dnf install ncurses-compat-libs -y # Libreria ncurses antigua
 dnf install crontabs cronie cronie-anacron -y
 dnf install s-nail -y # AL9 sendmail
-
 dnf install screen -y
+
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 /usr/sbin/setenforce 0
