@@ -28,7 +28,10 @@ sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_co
 echo "Cambiando puerto SSH default 22 a $SSH_PORT..."
 sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
 
-service sshd restart
+# En Ubuntu 23 el puerto está en otro archivo
+sed -i "s/ListenStream=.*/ListenStream=$SSH_PORT/" /lib/systemd/system/ssh.socket && systemctl daemon-reload
+
+systemctl restart ssh || systemctl restart sshd
 
 echo "Configurando SSD (de poseer)..."
 for DEVFULL in /dev/sg? /dev/sd?; do
