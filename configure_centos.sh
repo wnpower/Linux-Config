@@ -176,4 +176,7 @@ fi
 # DESINSTALAR POSTFIX
 yum remove postfix -y
 
+history -c
+echo "" > /root/.bash_history
+
 echo "Finalizado!"

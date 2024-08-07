@@ -164,4 +164,7 @@ dnf remove postfix -y
 # ACTIVANDO TLS 1.0
 update-crypto-policies --set LEGACY
 
+history -c
+echo "" > /root/.bash_history
+
 echo "Finalizado!"

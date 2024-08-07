@@ -65,3 +65,6 @@ elif echo $OS | grep -i "ubuntu" > /dev/null; then
         wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_ubuntu.sh -O /tmp/configure_ubuntu.sh
         bash /tmp/configure_ubuntu.sh "$@" 2>&1 | tee "$LOGFILE"
 fi
+
+history -c
+echo "" > /root/.bash_history

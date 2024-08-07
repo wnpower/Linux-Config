@@ -93,4 +93,7 @@ systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 # DESINSTALAR POSTFIX
 apt remove postfix -y
 
+history -c
+echo "" > /root/.bash_history
+
 echo "Finalizado!"
