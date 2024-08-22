@@ -28,6 +28,17 @@ sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 /usr/sbin/setenforce 0
 iptables-save > /root/firewall.rules
 
+# CREANDO SWAP SI NO TIENE
+if ! free | awk '/^Swap:/ {exit (!$2 || ($2<2194300))}'; then
+        echo "SWAP no detectada o menos de 2GB. Configurando..."
+
+        dd if=/dev/zero of=/swap count=4096 bs=1MiB
+        chmod 600 /swap
+        mkswap /swap
+        swapon /swap
+        echo "/swap swap swap sw 0 0" >> /etc/fstab
+fi
+
 echo "Configurando Red..."
 
 # Viejo network-scripts. Deprecado en AL9

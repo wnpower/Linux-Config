@@ -12,6 +12,17 @@ DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confdef
 apt install ca-certificates -y
 apt install screen ntpdate git -y
 
+# CREANDO SWAP SI NO TIENE
+if ! free | awk '/^Swap:/ {exit (!$2 || ($2<2194300))}'; then
+        echo "SWAP no detectada o menos de 2GB. Configurando..."
+
+        dd if=/dev/zero of=/swap count=4096 bs=1MiB
+        chmod 600 /swap
+        mkswap /swap
+        swapon /swap
+        echo "/swap swap swap sw 0 0" >> /etc/fstab
+fi
+
 echo "Configurando Red..."
 echo "Reescribiendo /etc/resolv.conf..."
 
