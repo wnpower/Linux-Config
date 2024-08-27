@@ -22,6 +22,10 @@ dnf install crontabs cronie cronie-anacron -y
 dnf install s-nail -y # AL9 sendmail
 dnf install screen -y
 
+# Para que ande jq
+dnf install oniguruma -y
+dnf install libsodium -y
+
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 /usr/sbin/setenforce 0
