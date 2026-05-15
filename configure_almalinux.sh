@@ -179,6 +179,10 @@ dnf remove postfix -y
 # ACTIVANDO TLS 1.0
 update-crypto-policies --set LEGACY
 
+# https://almalinux.org/blog/2026-05-15-ssh-keysign-pwn-cve-2026-46333/ 
+echo "kernel.yama.ptrace_scope = 2 # Disable user traces" >> /etc/sysctl.conf
+sysctl -p
+
 history -c
 echo "" > /root/.bash_history
 
