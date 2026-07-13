@@ -21,6 +21,7 @@ dnf install ncurses-compat-libs -y # Libreria ncurses antigua
 dnf install crontabs cronie cronie-anacron -y
 dnf install s-nail -y # AL9 sendmail
 dnf install screen -y
+dnf install rsyslog-logrotate -y
 
 # Para que ande jq
 dnf install oniguruma -y
