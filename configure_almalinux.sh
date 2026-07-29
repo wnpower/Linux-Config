@@ -19,7 +19,7 @@ dnf install epel-release dnf-plugins-core -y
 dnf install ncurses-compat-libs -y # Libreria ncurses antigua
 dnf install crontabs cronie cronie-anacron -y
 dnf install s-nail -y # AL9 sendmail
-dnf install screen -y; dnf reinstall screen # Fix error en AL10 https://forums.almalinux.org/t/alma-10-screen-command/7367/3
+dnf install screen -y; dnf reinstall screen -y # Fix error en AL10 https://forums.almalinux.org/t/alma-10-screen-command/7367/3
 dnf install rsyslog-logrotate -y
 
 # Para que ande jq
