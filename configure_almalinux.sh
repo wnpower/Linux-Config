@@ -11,16 +11,15 @@ if [ ! -f /etc/redhat-release ]; then
 fi
 
 echo "Actualizando SO..."
-rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux # Update GPG https://cloudlinux.zendesk.com/hc/en-us/articles/12225072530204-yum-update-error-Error-GPG-check-FAILED
 dnf update -y
 dnf groupinstall "Base" --skip-broken -y
+dnf install initscripts-service # Restaura el comando "service" en AL10
 
 dnf install epel-release dnf-plugins-core -y
-dnf config-manager --set-enabled powertools
 dnf install ncurses-compat-libs -y # Libreria ncurses antigua
 dnf install crontabs cronie cronie-anacron -y
 dnf install s-nail -y # AL9 sendmail
-dnf install screen -y
+dnf install screen -y; dnf reinstall screen # Fix error en AL10 https://forums.almalinux.org/t/alma-10-screen-command/7367/3
 dnf install rsyslog-logrotate -y
 
 # Para que ande jq
@@ -30,7 +29,6 @@ dnf install libsodium -y
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 /usr/sbin/setenforce 0
-iptables-save > /root/firewall.rules
 
 # CREANDO SWAP SI NO TIENE
 if ! free | awk '/^Swap:/ {exit (!$2 || ($2<2194300))}'; then
@@ -44,19 +42,6 @@ if ! free | awk '/^Swap:/ {exit (!$2 || ($2<2194300))}'; then
 fi
 
 echo "Configurando Red..."
-
-# Viejo network-scripts. Deprecado en AL9
-find /etc/sysconfig/network-scripts/ -name "ifcfg-*" -not -name "ifcfg-lo" | while read ETHCFG
-do
-	sed -i '/^PEERDNS=.*/d' $ETHCFG
-	sed -i '/^DNS1=.*/d' $ETHCFG
-	sed -i '/^DNS2=.*/d' $ETHCFG
-	
-	echo "PEERDNS=no" >> $ETHCFG
-	echo "DNS1=8.8.8.8" >> $ETHCFG
-	echo "DNS2=8.8.4.4" >> $ETHCFG
-
-done
 
 # Configurar cloud-init (en AWS para que no pise resolv.conf)
 if [ -f /etc/cloud/cloud.cfg ]; then
@@ -103,20 +88,20 @@ fi
 echo "Cambiando puerto SSH default 22 a $SSH_PORT..."
 sed -i "s/^\(#\|\)Port.*/Port $SSH_PORT/" /etc/ssh/sshd_config
 
-service sshd restart
+systemctl restart sshd
 
 # FIREWALL
 
 # SI TIENE SOLO IPTABLES
 if [ -f /etc/sysconfig/iptables ]; then
 	sed -i 's/dport 22 /dport 2022 /' /etc/sysconfig/iptables
-	service iptables restart 2>/dev/null
+	systemctl restart iptables 2>/dev/null
 fi
 
 # SI TIENE FIREWALLD
 if systemctl is-enabled firewalld | grep "^enabled$" > /dev/null; then
 	if systemctl is-active firewalld | grep "^inactive$" > /dev/null; then
-		service firewalld restart
+		systemctl restart firewalld
 	fi
 	firewall-cmd --permanent --add-port=2022/tcp > /dev/null
 	firewall-offline-cmd --add-port=2022/tcp > /dev/null
@@ -158,8 +143,8 @@ echo "Instalando GIT..."
 dnf install git -y
 
 echo "Instalando CRON clean de Journal..."
-echo "30 22 * * * root /usr/bin/journalctl --vacuum-time=1d; /usr/sbin/service systemd-journald restart" > /etc/cron.d/clean_journal
-service crond restart
+echo "30 22 * * * root /usr/bin/journalctl --vacuum-time=1d; /usr/bin/systemctl restart systemd-journald" > /etc/cron.d/clean_journal
+systemctl restart crond
 
 # TAREAS POST-INSTALACION
 
