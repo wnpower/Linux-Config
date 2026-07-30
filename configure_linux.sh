@@ -28,10 +28,6 @@ elif [ -f /etc/almalinux-release ]; then
         # Almalinux.
         OS="almalinux"
         VER=$(grep -o "[0-9]" /etc/almalinux-release | head -1)
-elif [ -f /etc/redhat-release ]; then
-        # Older Red Hat, CentOS, etc.
-        OS="centos"
-        VER=$(grep -o "[0-9]" /etc/redhat-release | head -1)
 else
         # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
         OS=$(uname -s)
@@ -41,13 +37,7 @@ fi
 echo "Sistema operativo detectado: $OS, versión: $VER"
 echo ""
 
-if echo $OS | grep -i "centos" > /dev/null; then
-	echo "Ejecutando script para CentOS..."
-	yum install wget -y
-	wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_centos.sh -O /tmp/configure_centos.sh
-	bash /tmp/configure_centos.sh "$@" 2>&1 | tee "$LOGFILE"
-
-elif echo $OS | grep -i "almalinux" > /dev/null; then
+if echo $OS | grep -i "almalinux" > /dev/null; then
         echo "Ejecutando script para Almalinux..."
         yum install wget -y
         wget https://raw.githubusercontent.com/wnpower/Linux-Config/master/configure_almalinux.sh -O /tmp/configure_almalinux.sh
