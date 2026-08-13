@@ -13,7 +13,7 @@ fi
 echo "Actualizando SO..."
 dnf update -y
 dnf groupinstall "Base" --skip-broken -y
-dnf install initscripts-service # Restaura el comando "service" en AL10
+dnf install initscripts-service -y # Restaura el comando "service" en AL10
 dnf remove cockpit -y
 
 dnf install epel-release dnf-plugins-core -y
