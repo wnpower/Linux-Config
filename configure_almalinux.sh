@@ -113,6 +113,11 @@ echo "Configurando FSCK..."
 grubby --update-kernel=ALL --args=fsck.repair=yes
 grep "fsck.repair" /etc/default/grub > /dev/null || sed 's/^GRUB_CMDLINE_LINUX="/&fsck.repair=yes /' /etc/default/grub
 
+# Tiempo de Grub
+sed -i '/GRUB_TIMEOUT/d' /etc/default/grub
+echo "GRUB_TIMEOUT=60" >> /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg # BIOS y UEFI
+
 echo "Configurando dnf-automatic ..."
 dnf -y install dnf-automatic
 sed -i 's/^apply_updates.*/apply_updates = yes/' /etc/dnf/automatic.conf

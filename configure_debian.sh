@@ -70,6 +70,11 @@ for DEVFULL in /dev/sg? /dev/sd?; do
         fi
 done
 
+# Tiempo de Grub
+sed -i '/GRUB_TIMEOUT/d' /etc/default/grub
+echo "GRUB_TIMEOUT=60" >> /etc/default/grub
+update-grub
+
 echo "Sincronizando fecha con pool.ntp.org..."
 ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
 if [ -f /usr/share/zoneinfo/America/Buenos_Aires ]; then

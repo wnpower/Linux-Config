@@ -44,6 +44,11 @@ sed -i "s/ListenStream=.*/ListenStream=$SSH_PORT/" /lib/systemd/system/ssh.socke
 
 systemctl restart ssh || systemctl restart sshd
 
+# Tiempo de Grub
+sed -i '/GRUB_TIMEOUT/d' /etc/default/grub
+echo "GRUB_TIMEOUT=60" >> /etc/default/grub
+update-grub
+
 echo "Configurando SSD (de poseer)..."
 for DEVFULL in /dev/sg? /dev/sd?; do
 	DEV=$(echo "$DEVFULL" | cut -d'/' -f3)
